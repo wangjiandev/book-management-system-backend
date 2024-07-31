@@ -5,7 +5,10 @@ content-type: application/json
 
 {
 		"username": "test",
-		"password": "test123456"
+		"password": "test123456",
+		"nickName": "test",
+		"email": "wangjian0504@gmail.com",
+		"captcha": "123456"
 }
 
 ###

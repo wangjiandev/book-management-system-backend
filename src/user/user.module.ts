@@ -1,15 +1,12 @@
-import { Module } from '@nestjs/common'
+import { Logger, Module } from '@nestjs/common'
 import { UserService } from './user.service'
 import { UserController } from './user.controller'
-import { DbModule } from 'src/db/db.module'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { User } from './entities/user.entity'
 
 @Module({
-  imports: [
-    DbModule.register({
-      path: 'data/users.json',
-    }),
-  ],
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, Logger],
 })
 export class UserModule {}

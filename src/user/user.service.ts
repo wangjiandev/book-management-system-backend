@@ -1,63 +1,43 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common'
-import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
-import { DbService } from 'src/db/db.service'
+import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common'
 import { RegisterUserDto } from './dto/register-user.dto'
 import { User } from './entities/user.entity'
-import { LoginUserDto } from './dto/login-user.dto'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { RedisService } from 'src/redis/redis.service'
+import { md5 } from 'src/utils'
 
 @Injectable()
 export class UserService {
-  @Inject(DbService)
-  dbService: DbService
+  constructor(private readonly logger: Logger, private readonly redisService: RedisService) {}
 
-  async register(registerUserDto: RegisterUserDto) {
-    const users: User[] = await this.dbService.read()
+  @InjectRepository(User)
+  private userRepository: Repository<User>
 
-    const foundUser = users.find((item) => item.username === registerUserDto.username)
-
+  async register(user: RegisterUserDto) {
+    const captcha = await this.redisService.get(`captcha_${user.email}`)
+    if (!captcha) {
+      throw new HttpException('验证码已失效', HttpStatus.BAD_REQUEST)
+    }
+    if (user.captcha !== captcha) {
+      throw new HttpException('验证码不正确', HttpStatus.BAD_REQUEST)
+    }
+    const foundUser = await this.userRepository.findOneBy({
+      username: user.username,
+    })
     if (foundUser) {
-      throw new BadRequestException('该用户已经注册')
+      throw new HttpException('用户已存在', HttpStatus.BAD_REQUEST)
     }
-
-    const user = new User()
-    user.username = registerUserDto.username
-    user.password = registerUserDto.password
-    users.push(user)
-
-    await this.dbService.write(users)
-    return user
-  }
-
-  async login(loginUserDto: LoginUserDto) {
-    const users: User[] = await this.dbService.read()
-    const foundUser = users.find((item) => item.username === loginUserDto.username)
-    if (!foundUser) {
-      throw new BadRequestException('用户不存在')
+    const newUser = new User()
+    newUser.username = user.username
+    newUser.password = md5(user.password)
+    newUser.email = user.email
+    newUser.nickName = user.nickName
+    try {
+      await this.userRepository.save(newUser)
+      return '注册成功'
+    } catch (e) {
+      this.logger.error(e, UserService)
+      return '注册失败'
     }
-    if (foundUser.password !== loginUserDto.password) {
-      throw new BadRequestException('密码不正确')
-    }
-    return foundUser
-  }
-
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user'
-  }
-
-  findAll() {
-    return `This action returns all user`
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`
   }
 }
