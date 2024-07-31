@@ -11,9 +11,14 @@ import { Role } from './user/entities/role.entity'
 import { Permission } from './user/entities/permission.entity'
 import { RedisModule } from './redis/redis.module'
 import { EmailModule } from './email/email.module'
+import { ConfigModule } from '@nestjs/config'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
