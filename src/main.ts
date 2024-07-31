@@ -24,11 +24,11 @@ async function bootstrap() {
             }),
           ),
         }),
-        new transports.File({
-          format: format.combine(format.timestamp(), format.json()),
-          filename: 'taishan.log',
-          dirname: 'log',
-        }),
+        // new transports.File({
+        //   format: format.combine(format.timestamp(), format.json()),
+        //   filename: 'taishan.log',
+        //   dirname: 'log',
+        // }),
       ],
     }),
   })
