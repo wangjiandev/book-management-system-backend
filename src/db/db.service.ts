@@ -9,7 +9,6 @@ export class DbService {
 
   async read() {
     const filePath = this.options.path
-    console.log('==> ', filePath)
     try {
       await access(filePath)
     } catch (e) {

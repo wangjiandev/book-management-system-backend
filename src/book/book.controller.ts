@@ -20,9 +20,7 @@ import { storage } from './my-file-storage'
 
 @Controller('book')
 export class BookController {
-  constructor(private readonly bookService: BookService) {}
-
-  private logger = new Logger()
+  constructor(private readonly bookService: BookService, private readonly logger: Logger) {}
 
   /**
    * 上传文件
@@ -62,12 +60,9 @@ export class BookController {
 
   @Get()
   async findAll() {
-    this.logger.debug('获取所有书籍', BookController.name)
-    this.logger.error('获取所有书籍', BookController.name)
-    this.logger.fatal('获取所有书籍', BookController.name)
-    this.logger.log('获取所有书籍', BookController.name)
-    this.logger.verbose('获取所有书籍', BookController.name)
-    this.logger.warn('获取所有书籍', BookController.name)
+    this.logger.error('获取所有书籍2', BookController.name)
+    this.logger.log('获取所有书籍4', BookController.name)
+    this.logger.warn('获取所有书籍6', BookController.name)
     return this.bookService.findAll()
   }
 

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Logger, Module } from '@nestjs/common'
 import { BookService } from './book.service'
 import { BookController } from './book.controller'
 import { DbModule } from 'src/db/db.module'
@@ -10,6 +10,6 @@ import { DbModule } from 'src/db/db.module'
     }),
   ],
   controllers: [BookController],
-  providers: [BookService],
+  providers: [BookService, Logger],
 })
 export class BookModule {}
