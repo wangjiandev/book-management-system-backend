@@ -1,26 +1,31 @@
-import { Injectable } from '@nestjs/common';
-import { CreateEmailDto } from './dto/create-email.dto';
-import { UpdateEmailDto } from './dto/update-email.dto';
+import { Injectable } from '@nestjs/common'
+import { createTransport, Transporter } from 'nodemailer'
 
 @Injectable()
 export class EmailService {
-  create(createEmailDto: CreateEmailDto) {
-    return 'This action adds a new email';
+  private transporter: Transporter
+
+  constructor() {
+    this.transporter = createTransport({
+      host: 'smtp.qq.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: '928647866@qq.com',
+        pass: '你的授权码',
+      },
+    })
   }
 
-  findAll() {
-    return `This action returns all email`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} email`;
-  }
-
-  update(id: number, updateEmailDto: UpdateEmailDto) {
-    return `This action updates a #${id} email`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} email`;
+  async sendMail({ to, subject, html }) {
+    await this.transporter.sendMail({
+      from: {
+        name: '会议室预定系统',
+        address: '你的邮箱地址',
+      },
+      to,
+      subject,
+      html,
+    })
   }
 }
