@@ -26,8 +26,18 @@ POST http://127.0.0.1:3000/user/login HTTP/1.1
 content-type: application/json
 
 {
-		"username": "test",
-		"password": "test123456"
+		"username": "lisi",
+		"password": "222222"
+}
+
+###
+// 管理员登录
+POST http://127.0.0.1:3000/user/admin/login HTTP/1.1
+content-type: application/json
+
+{
+		"username": "zhangsan",
+		"password": "111111"
 }
 
 ###

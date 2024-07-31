@@ -3,6 +3,7 @@ import { UserService } from './user.service'
 import { RegisterUserDto } from './dto/register-user.dto'
 import { EmailService } from 'src/email/email.service'
 import { RedisService } from 'src/redis/redis.service'
+import { LoginUserDto } from './dto/login-user.dto'
 
 @Controller('user')
 export class UserController {
@@ -37,5 +38,19 @@ export class UserController {
   async register(@Body() registerUserDto: RegisterUserDto) {
     this.logger.log('user/register', UserController.name)
     return await this.userService.register(registerUserDto)
+  }
+
+  @Post('login')
+  async userLogin(@Body() loginUser: LoginUserDto) {
+    const user = await this.userService.login(loginUser, false)
+    this.logger.log(user, UserController.name)
+    return user
+  }
+
+  @Post('admin/login')
+  async adminLogin(@Body() loginUser: LoginUserDto) {
+    const user = await this.userService.login(loginUser, true)
+    this.logger.log(user, UserController.name)
+    return user
   }
 }
