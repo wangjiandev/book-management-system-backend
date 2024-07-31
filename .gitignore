@@ -11,12 +11,16 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# upload
+uploads
+
 # OS
 .DS_Store
 
 # Tests
 /coverage
 /.nyc_output
+/data
 
 # IDEs and editors
 /.idea

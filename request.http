@@ -17,3 +17,48 @@ content-type: application/json
 		"username": "test",
 		"password": "test123456"
 }
+
+###
+// 查询图书列表
+GET http://127.0.0.1:3000/book HTTP/1.1
+content-type: application/json
+
+
+###
+// 新增图书
+POST http://127.0.0.1:3000/book HTTP/1.1
+content-type: application/json
+
+{
+		"name": "红楼梦",
+		"author": "曹雪芹",
+		"description": "中国古代四大名著之一",
+		"cover": "xx.png"
+}
+
+
+###
+// 根据主键查询图书
+GET http://127.0.0.1:3000/book/384730 HTTP/1.1
+content-type: application/json
+
+
+###
+// 修改图书
+PATCH http://127.0.0.1:3000/book HTTP/1.1
+content-type: application/json
+
+{
+		"id": 384730,
+		"name": "红楼梦2",
+		"author": "曹雪芹2",
+		"description": "中国古代四大名著之一",
+		"cover": "xx1.png"
+}
+
+
+###
+// 删除图书
+DELETE http://127.0.0.1:3000/book/384730 HTTP/1.1
+content-type: application/json
+
