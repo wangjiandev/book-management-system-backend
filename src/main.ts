@@ -7,6 +7,7 @@ import { WinstonModule } from 'nest-winston'
 import { transports, format } from 'winston'
 import * as chalk from 'chalk'
 import * as dayjs from 'dayjs'
+import { ConfigService } from '@nestjs/config'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -41,6 +42,8 @@ async function bootstrap() {
   app.enableCors()
   // 静态资源访问,便于访问上传的文件
   app.useStaticAssets(join(__dirname, '../uploads'), { prefix: '/uploads' })
-  await app.listen(3000)
+
+  const configService = app.get(ConfigService)
+  await app.listen(configService.get('nest_server_port'))
 }
 bootstrap()
