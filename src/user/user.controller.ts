@@ -13,10 +13,10 @@ export class UserController {
     private readonly redisService: RedisService,
   ) {}
 
-  @Post('register')
-  async register(@Body() registerUserDto: RegisterUserDto) {
-    this.logger.log('user/register', UserController.name)
-    return await this.userService.register(registerUserDto)
+  @Get('init')
+  async init() {
+    await this.userService.initData()
+    return '初始化成功'
   }
 
   @Get('captcha')
@@ -31,5 +31,11 @@ export class UserController {
       html: `<p>你的注册验证码是 ${code}</p>`,
     })
     return '发送成功'
+  }
+
+  @Post('register')
+  async register(@Body() registerUserDto: RegisterUserDto) {
+    this.logger.log('user/register', UserController.name)
+    return await this.userService.register(registerUserDto)
   }
 }

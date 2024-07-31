@@ -1,4 +1,8 @@
 ###
+// 初始化数据
+GET http://127.0.0.1:3000/user/init HTTP/1.1
+
+###
 // 发送验证码
 GET http://127.0.0.1:3000/user/captcha?address=928647866@qq.com HTTP/1.1
 
