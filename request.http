@@ -1,15 +1,13 @@
-###
-// 初始化数据
-GET http://127.0.0.1:3000/user/init HTTP/1.1
+@baseUrl = http://127.0.0.1:3000
 
 ###
-// 发送验证码
-GET http://127.0.0.1:3000/user/captcha?address=928647866@qq.com HTTP/1.1
-
+GET {{baseUrl}}/user/init HTTP/1.1
 
 ###
-// 注册
-POST http://127.0.0.1:3000/user/register HTTP/1.1
+GET {{baseUrl}}/user/captcha?address=928647866@qq.com HTTP/1.1
+
+###
+POST {{baseUrl}}/user/register HTTP/1.1
 content-type: application/json
 
 {
@@ -21,8 +19,8 @@ content-type: application/json
 }
 
 ###
-// 登录
-POST http://127.0.0.1:3000/user/login HTTP/1.1
+# @name login
+POST {{baseUrl}}/user/login HTTP/1.1
 content-type: application/json
 
 {
@@ -30,9 +28,18 @@ content-type: application/json
 		"password": "222222"
 }
 
+### 
+
+@authToken = {{login.response.body.accessToken}}
+
 ###
-// 管理员登录
-POST http://127.0.0.1:3000/user/admin/login HTTP/1.1
+GET {{baseUrl}}/aaa HTTP/1.1
+Authorization: Bearer {{authToken}}
+content-type: application/json
+
+###
+# @name admin
+POST {{baseUrl}}/user/admin/login HTTP/1.1
 content-type: application/json
 
 {
@@ -40,15 +47,21 @@ content-type: application/json
 		"password": "111111"
 }
 
+### 
+@adminAuthToken = {{admin.response.body.accessToken}}
+
 ###
-// 查询图书列表
-GET http://127.0.0.1:3000/book HTTP/1.1
+GET {{baseUrl}}/aaa HTTP/1.1
+Authorization: Bearer {{adminAuthToken}}
+content-type: application/json
+
+###
+GET {{baseUrl}}/book HTTP/1.1
 content-type: application/json
 
 
 ###
-// 新增图书
-POST http://127.0.0.1:3000/book HTTP/1.1
+POST {{baseUrl}}/book HTTP/1.1
 content-type: application/json
 
 {
@@ -60,14 +73,12 @@ content-type: application/json
 
 
 ###
-// 根据主键查询图书
-GET http://127.0.0.1:3000/book/384730 HTTP/1.1
+GET {{baseUrl}}/book/384730 HTTP/1.1
 content-type: application/json
 
 
 ###
-// 修改图书
-PATCH http://127.0.0.1:3000/book HTTP/1.1
+PATCH {{baseUrl}}/book HTTP/1.1
 content-type: application/json
 
 {
@@ -80,7 +91,6 @@ content-type: application/json
 
 
 ###
-// 删除图书
-DELETE http://127.0.0.1:3000/book/384730 HTTP/1.1
+DELETE {{baseUrl}}/book/384730 HTTP/1.1
 content-type: application/json
 
