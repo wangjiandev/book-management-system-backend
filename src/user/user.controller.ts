@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Logger, Query, Get, UnauthorizedException } from '@nestjs/common'
+import { Controller, Post, Body, Logger, Query, Get, UnauthorizedException, DefaultValuePipe } from '@nestjs/common'
 import { UserService } from './user.service'
 import { RegisterUserDto } from './dto/register-user.dto'
 import { EmailService } from 'src/email/email.service'
@@ -10,6 +10,7 @@ import { RequireLogin, UserInfo } from 'src/custom.decorator'
 import { UserDetailVo } from './vo/user-info.vo'
 import { UpdateUserPasswordDto } from './dto/update-user-password.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { generateParseIntPipe } from 'src/utils'
 
 @Controller('user')
 export class UserController {
@@ -22,10 +23,22 @@ export class UserController {
     private readonly jwtService: JwtService,
   ) {}
 
+  @Get('list')
+  async list(
+    @Query('pageNo', new DefaultValuePipe(1), generateParseIntPipe('pageNo'))
+    pageNo: number,
+    @Query('pageSize', new DefaultValuePipe(10), generateParseIntPipe('pageSize'))
+    pageSize: number,
+    @Query('username') username: string,
+    @Query('nickName') nickName: string,
+    @Query('email') email: string,
+  ) {
+    return await this.userService.findUsersByPage(username, nickName, email, pageNo, pageSize)
+  }
+
   @Get('info')
   @RequireLogin()
   async info(@UserInfo('userId') userId: number) {
-    console.log('==>', userId)
     const user = await this.userService.findUserDetailById(userId)
     const vo = new UserDetailVo()
     vo.id = user.id
@@ -37,6 +50,12 @@ export class UserController {
     vo.createTime = user.createTime
     vo.isFrozen = user.isFrozen
     return vo
+  }
+
+  @Get('freeze')
+  async freeze(@Query('id') userId: number) {
+    await this.userService.freezeUserById(userId)
+    return 'success'
   }
 
   @Post(['update', 'admin/update'])

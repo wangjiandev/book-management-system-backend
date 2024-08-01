@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import { RegisterUserDto } from './dto/register-user.dto'
 import { User } from './entities/user.entity'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
 import { RedisService } from 'src/redis/redis.service'
 import { md5 } from 'src/utils'
 import { Role } from './entities/role.entity'
@@ -24,6 +24,48 @@ export class UserService {
 
   @InjectRepository(Permission)
   private permissionRepository: Repository<Permission>
+
+  async findUsersByPage(username: string, nickName: string, email: string, pageNo: number, pageSize: number) {
+    const skipCount = (pageNo - 1) * pageSize
+
+    const condition: Record<string, any> = {}
+    if (username) {
+      condition.username = Like(`%${username}%`)
+    }
+    if (nickName) {
+      condition.nickName = Like(`%${nickName}%`)
+    }
+    if (email) {
+      condition.email = Like(`%${email}%`)
+    }
+
+    const [users, totalCount] = await this.userRepository.findAndCount({
+      select: ['id', 'username', 'nickName', 'email', 'phoneNumber', 'isFrozen', 'headPic', 'createTime'],
+      skip: skipCount,
+      take: pageSize,
+      where: condition,
+    })
+    return {
+      users,
+      totalCount,
+    }
+  }
+
+  async freezeUserById(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    })
+    user.isFrozen = true
+    try {
+      await this.userRepository.save(user)
+      return '冻结成功'
+    } catch (e) {
+      this.logger.error(e, UserService)
+      return '冻结失败'
+    }
+  }
 
   async update(userId: number, updateUserDto: UpdateUserDto) {
     // TODO: 不验证验证码
