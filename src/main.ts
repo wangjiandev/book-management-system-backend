@@ -8,6 +8,8 @@ import { transports, format } from 'winston'
 import * as chalk from 'chalk'
 import * as dayjs from 'dayjs'
 import { ConfigService } from '@nestjs/config'
+import { FormatResponseInterceptor } from './format-response.interceptor'
+import { InvokeRecordInterceptor } from './invoke-record.interceptor'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -38,6 +40,8 @@ async function bootstrap() {
       transform: true,
     }),
   )
+  app.useGlobalInterceptors(new FormatResponseInterceptor())
+  app.useGlobalInterceptors(new InvokeRecordInterceptor())
   // 支持下跨域访问
   app.enableCors()
   // 静态资源访问,便于访问上传的文件
