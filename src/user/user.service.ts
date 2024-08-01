@@ -9,6 +9,8 @@ import { Role } from './entities/role.entity'
 import { Permission } from './entities/permission.entity'
 import { LoginUserDto } from './dto/login-user.dto'
 import { LoginUserVo } from './vo/login-user.vo'
+import { UpdateUserPasswordDto } from './dto/update-user-password.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
 
 @Injectable()
 export class UserService {
@@ -22,6 +24,54 @@ export class UserService {
 
   @InjectRepository(Permission)
   private permissionRepository: Repository<Permission>
+
+  async update(userId: number, updateUserDto: UpdateUserDto) {
+    // TODO: 不验证验证码
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    })
+    if (updateUserDto.nickName) {
+      user.nickName = updateUserDto.nickName
+    }
+    if (updateUserDto.headPic) {
+      user.headPic = updateUserDto.headPic
+    }
+    try {
+      await this.userRepository.save(user)
+      return '用户信息修改成功'
+    } catch (e) {
+      this.logger.error(e, UserService)
+      return '用户信息修改成功'
+    }
+  }
+
+  async updatePassword(userId: number, passwordDto: UpdateUserPasswordDto) {
+    // TODO: 不验证验证码
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    })
+    user.password = md5(passwordDto.password)
+    try {
+      await this.userRepository.save(user)
+      return '密码修改成功'
+    } catch (e) {
+      this.logger.error(e, UserService)
+      return '密码修改失败'
+    }
+  }
+
+  async findUserDetailById(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    })
+    return user
+  }
 
   /**
    * 初始化数据

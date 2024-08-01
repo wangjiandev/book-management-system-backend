@@ -30,11 +30,16 @@ content-type: application/json
 
 ### 
 
-@authToken = {{login.response.body.accessToken}}
+@authToken = {{login.response.body.data.accessToken}}
 
 ###
-GET {{baseUrl}}/aaa HTTP/1.1
-Authorization: Bearer {{authToken}}
+GET {{baseUrl}}/bbb HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzZXJuYW1lIjoibGlzaSIsInJvbGVzIjpbIuaZrumAmueUqOaItyJdLCJwZXJtaXNzaW9ucyI6W3siaWQiOjEsImNvZGUiOiJjY2MiLCJkZXNjcmlwdGlvbiI6Iuiuv-mXriBjY2Mg5o6l5Y-jIn1dLCJpYXQiOjE3MjI0OTg5NTQsImV4cCI6MTcyMjUwMDc1NH0.C3Jy3qyGh0XcVYfYKPyn2WMjf0VgG_b_MJqEESHk9IA
+content-type: application/json
+
+###
+GET {{baseUrl}}/user/info HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzZXJuYW1lIjoibGlzaSIsInJvbGVzIjpbIuaZrumAmueUqOaItyJdLCJwZXJtaXNzaW9ucyI6W3siaWQiOjEsImNvZGUiOiJjY2MiLCJkZXNjcmlwdGlvbiI6Iuiuv-mXriBjY2Mg5o6l5Y-jIn1dLCJpYXQiOjE3MjI0OTg5NTQsImV4cCI6MTcyMjUwMDc1NH0.C3Jy3qyGh0XcVYfYKPyn2WMjf0VgG_b_MJqEESHk9IA
 content-type: application/json
 
 ###

@@ -5,7 +5,7 @@ export const RequireLogin = () => SetMetadata('require-login', true)
 export const RequirePermission = (...permissions: string[]) => SetMetadata('require-permission', permissions)
 export const UserInfo = createParamDecorator((data: string, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest<Request>()
-
+  console.log('request.user: ', request.user)
   if (!request.user) {
     return null
   }
