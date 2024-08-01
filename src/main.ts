@@ -10,6 +10,8 @@ import * as dayjs from 'dayjs'
 import { ConfigService } from '@nestjs/config'
 import { FormatResponseInterceptor } from './format-response.interceptor'
 import { InvokeRecordInterceptor } from './invoke-record.interceptor'
+import { UnloginFilter } from './unlogin.filter'
+import { CustomExceptionFilter } from './custom-exception.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -46,6 +48,8 @@ async function bootstrap() {
   app.enableCors()
   // 静态资源访问,便于访问上传的文件
   app.useStaticAssets(join(__dirname, '../uploads'), { prefix: '/uploads' })
+  app.useGlobalFilters(new UnloginFilter())
+  app.useGlobalFilters(new CustomExceptionFilter())
 
   const configService = app.get(ConfigService)
   await app.listen(configService.get('nest_server_port'))
