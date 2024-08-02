@@ -30,9 +30,9 @@ import { PermissionGuard } from './permission.guard'
         username: configService.get('postgresql_server_username'),
         password: configService.get('postgresql_server_password'),
         database: configService.get('postgresql_server_database'),
-        synchronize: true,
+        synchronize: false,
         logging: true,
-        entities: [User, Role, Permission],
+        entities: ['src/**/*.entity.ts'],
         poolSize: 10,
         extra: {
           authPlugin: 'sha256_password',

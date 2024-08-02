@@ -3,26 +3,32 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
+    env_file: 
+      - .env
     depends_on:
-      - mysql-container
+      - postgres-container
       - redis-container
     ports:
-      - 3005:3005
+      - 3000:3000
     networks:
       - common-network
-  mysql-container:
-    image: mysql
+
+  postgres-container:
+    image: postgres:latest
     volumes:
-      - /Users/guang/mysql-data:/var/lib/mysql
+      - ./pgdata:/var/lib/postgresql/data
     environment:
-      MYSQL_DATABASE: meeting_room_booking_system
-      MYSQL_ROOT_PASSWORD: guang
+      POSTGRES_DB: meeting_room_booking_system
+      POSTGRES_USER: wangjian
+      POSTGRES_PASSWORD: 
+      POSTGRES_HOST_AUTH_METHOD: trust
     networks:
       - common-network
+
   redis-container:
     image: redis
     volumes:
-      - /Users/guang/redis-data:/data
+      - ./redis-data:/data
     networks:
       - common-network
       

@@ -12,7 +12,10 @@ yarn-error.log*
 lerna-debug.log*
 
 # upload
-uploads
+/uploads
+/pgdata
+/data
+/redis-data
 
 # OS
 .DS_Store
@@ -20,7 +23,6 @@ uploads
 # Tests
 /coverage
 /.nyc_output
-/data
 
 # IDEs and editors
 /.idea
